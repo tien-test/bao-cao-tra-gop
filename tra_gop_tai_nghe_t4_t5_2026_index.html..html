@@ -1,0 +1,409 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body,div{font-family:'Segoe UI',system-ui,sans-serif;}
+.hdr{background:linear-gradient(135deg,#1A2744 0%,#2E4273 100%);color:#fff;padding:16px 20px 12px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-radius:12px 12px 0 0;}
+.hdr-title{font-size:16px;font-weight:800;line-height:1.2;color:#fff;}
+.hdr-title span{color:#60A5FA;}
+.hdr-sub{color:#94A3B8;font-size:10px;margin-top:3px;}
+.hdr-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:9px;font-weight:700;}
+.badge-green{background:#D1FAE5;color:#065F46;}
+.badge-blue{background:#DBEAFE;color:#1D4ED8;}
+.badge-yellow{background:#FEF3C7;color:#92400E;}
+.tabs{display:flex;background:#fff;border-bottom:2px solid #E5E7EB;overflow-x:auto;padding:0 12px;position:sticky;top:0;z-index:10;box-shadow:0 2px 6px rgba(0,0,0,.05);}
+.tab{padding:10px 14px;cursor:pointer;color:#6B7280;font-weight:600;font-size:11px;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s;margin-bottom:-2px;}
+.tab:hover{color:#1D4ED8;background:#F0F5FF;}
+.tab.active{color:#1D4ED8;border-bottom-color:#1D4ED8;}
+.page{display:none;padding:16px 18px;background:#F4F6FB;min-height:400px;}
+.page.active{display:block;}
+.st{font-size:13px;font-weight:700;color:#1A2744;margin-bottom:3px;}
+.ss{color:#6B7280;font-size:10px;margin-bottom:12px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px;}
+.kpi{background:#fff;border-radius:8px;padding:10px 12px;border:1px solid #E5E7EB;position:relative;overflow:hidden;}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;}
+.kpi.blue::before{background:#3B82F6;}.kpi.green::before{background:#10B981;}.kpi.red::before{background:#EF4444;}.kpi.yellow::before{background:#F59E0B;}.kpi.teal::before{background:#14B8A6;}
+.kpi-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#6B7280;margin-bottom:4px;}
+.kpi-val{font-size:18px;font-weight:800;line-height:1.1;}
+.kpi.blue .kpi-val{color:#1D4ED8;}.kpi.green .kpi-val{color:#059669;}.kpi.red .kpi-val{color:#DC2626;}.kpi.yellow .kpi-val{color:#D97706;}.kpi.teal .kpi-val{color:#0D9488;}
+.kpi-sub{font-size:9px;color:#9CA3AF;margin-top:3px;line-height:1.3;}
+.kpi-delta{font-size:10px;font-weight:700;margin-top:3px;}
+.kpi-delta.up{color:#059669;}.kpi-delta.dn{color:#DC2626;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+@media(max-width:700px){.grid2{grid-template-columns:1fr;}}
+.card{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:12px;}
+.card-title{font-size:11px;font-weight:700;color:#1A2744;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #F0F0F0;}
+.tbl-wrap{background:#fff;border-radius:8px;border:1px solid #E5E7EB;overflow:auto;margin-bottom:14px;}
+table{width:100%;border-collapse:collapse;min-width:460px;}
+thead th{background:#F8FAFC;color:#374151;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:7px 10px;text-align:left;border-bottom:2px solid #E5E7EB;white-space:nowrap;}
+tbody tr{border-bottom:1px solid #F3F4F6;transition:background .1s;}
+tbody tr:hover{background:#F8FAFC;}
+td{padding:7px 10px;vertical-align:middle;font-size:11px;}
+.r{text-align:right;}.c{text-align:center;}
+.total-row td{background:#EFF6FF;font-weight:700;color:#1D4ED8;border-top:2px solid #BFDBFE;}
+.pill{display:inline-block;border-radius:3px;padding:1px 6px;font-size:9px;font-weight:700;}
+.pg{background:#D1FAE5;color:#065F46;}.pr{background:#FEE2E2;color:#991B1B;}.py{background:#FEF3C7;color:#92400E;}.pb{background:#DBEAFE;color:#1E40AF;}.pgr{background:#F3F4F6;color:#4B5563;}
+.brand{display:inline-flex;align-items:center;gap:5px;font-weight:700;}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.ds{background:#3B82F6;}.db{background:#6B7280;}.dm{background:#CA8A04;}.dj{background:#EA580C;}
+.sc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.sc-card{border-radius:8px;padding:12px;border:1px solid #E5E7EB;}
+.sc-card.base{background:#F8FAFC;}.sc-card.target{background:#F0FDF4;border-color:#BBF7D0;}
+.sc-lbl{font-size:9px;font-weight:700;text-transform:uppercase;color:#6B7280;margin-bottom:8px;}
+.sc-lbl.t{color:#059669;}
+.sc-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(0,0,0,.04);font-size:11px;}
+.sc-row:last-child{border-bottom:none;}
+.scv{font-weight:700;}.scvr{color:#DC2626;}.scvg{color:#059669;}.scvb{color:#1D4ED8;}
+.info{background:#EFF6FF;border-left:3px solid #3B82F6;border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:12px;font-size:10px;color:#1E40AF;line-height:1.6;}
+.warn{background:#FFFBEB;border-left:3px solid #F59E0B;border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:12px;font-size:10px;color:#92400E;line-height:1.6;}
+.success{background:#F0FDF4;border-left:3px solid #10B981;border-radius:0 6px 6px 0;padding:8px 12px;margin-bottom:12px;font-size:10px;color:#065F46;line-height:1.6;}
+.chart-box{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:12px;margin-bottom:14px;}
+.ap-row{display:grid;grid-template-columns:28px 1fr 110px 80px 80px;gap:6px;padding:8px 12px;border-bottom:1px solid #F3F4F6;align-items:start;font-size:11px;}
+.ap-row:hover{background:#F9FAFB;}
+.ap-num{font-size:13px;font-weight:800;color:#1D4ED8;}
+.sw{background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;}
+.sd{background:#DBEAFE;color:#1D4ED8;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;}
+.ss2{background:#F0FDF4;color:#065F46;padding:1px 6px;border-radius:3px;font-size:9px;font-weight:700;}
+.pitch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px;}
+.pitch-card{background:#fff;border-radius:8px;border:1px solid #E5E7EB;padding:12px;}
+.pitch-brand{font-size:13px;font-weight:800;margin-bottom:3px;}
+.pitch-brand.s{color:#3B82F6;}.pitch-brand.b{color:#4B5563;}.pitch-brand.m{color:#CA8A04;}.pitch-brand.j{color:#EA580C;}
+.pitch-ask{background:#FFFBEB;border-radius:5px;padding:6px 8px;font-size:10px;color:#92400E;font-weight:600;margin-top:6px;}
+.pitch-kpi{display:flex;gap:6px;margin-top:6px;}
+.pki{background:#F8FAFC;border-radius:5px;padding:4px 8px;flex:1;text-align:center;}
+.pki .v{font-size:13px;font-weight:800;color:#1D4ED8;}
+.pki .l{font-size:8px;color:#9CA3AF;margin-top:1px;}
+.divider{height:1px;background:#E5E7EB;margin:14px 0;}
+.hdr-right{text-align:right;color:#94A3B8;font-size:10px;white-space:nowrap;}
+</style>
+
+<div style="border-radius:12px;overflow:hidden;border:1px solid #E5E7EB;background:#F4F6FB;">
+<div class="hdr">
+  <div>
+    <div class="hdr-title">📊 Báo Cáo Trả Góp – Nhóm <span>Tai Nghe</span></div>
+    <div class="hdr-sub">Tai Nghe Cao Cấp + Phụ Kiện · T4 &amp; T5/2026 · Nguồn: PowerBI + Google Sheets + Lark</div>
+    <div class="hdr-badges">
+      <span class="badge badge-green">✅ T4 Thực tế (P&amp;L)</span>
+      <span class="badge badge-blue">✅ T5 Thực tế (PowerBI)</span>
+      <span class="badge badge-yellow">⚡ Dự tính 9–12T</span>
+    </div>
+  </div>
+  <div class="hdr-right">Cập nhật: 31/05/2026<br>Team: Tai Nghe – Thắng</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">📊 Dashboard</div>
+  <div class="tab" onclick="switchTab(1)">📈 T4 vs T5</div>
+  <div class="tab" onclick="switchTab(2)">💳 Chi phí MDR</div>
+  <div class="tab" onclick="switchTab(3)">🎯 Sony TG</div>
+  <div class="tab" onclick="switchTab(4)">🔮 Scenario</div>
+  <div class="tab" onclick="switchTab(5)">✅ Action Plan</div>
+</div>
+
+<!-- PAGE 0: DASHBOARD -->
+<div class="page active" id="p0">
+  <div class="grid2" style="margin-top:0;">
+    <div>
+      <div style="background:#1A2744;color:#fff;border-radius:6px 6px 0 0;padding:6px 12px;font-size:10px;font-weight:700;">📌 THÁNG 4/2026 – THỰC TẾ</div>
+      <div style="background:#fff;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 6px 6px;padding:10px;">
+        <div class="kpi-grid">
+          <div class="kpi blue"><div class="kpi-label">Tổng DS</div><div class="kpi-val">26.7 tỷ</div><div class="kpi-sub">Cao cấp 17.97 | PKT 8.73</div></div>
+          <div class="kpi yellow"><div class="kpi-label">DS Trả Góp</div><div class="kpi-val">1.92 tỷ</div><div class="kpi-sub">7.19% DS</div></div>
+          <div class="kpi red"><div class="kpi-label">CP TG (P&amp;L)</div><div class="kpi-val">69.3 tr</div><div class="kpi-sub">TNG: 66.5 | PKT: 2.8</div></div>
+          <div class="kpi teal"><div class="kpi-label">CTTC/TG</div><div class="kpi-val">16.0%</div><div class="kpi-sub">Mục tiêu: 35%+</div></div>
+          <div class="kpi green"><div class="kpi-label">MDR Cổng</div><div class="kpi-val">1.93%</div><div class="kpi-sub">Lên 8–10% nếu 9–12T</div></div>
+          <div class="kpi teal"><div class="kpi-label">Sony Net</div><div class="kpi-val">2.44 tr</div><div class="kpi-sub">Sau TG 15.9tr Sony</div></div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="background:#2E4273;color:#fff;border-radius:6px 6px 0 0;padding:6px 12px;font-size:10px;font-weight:700;">🎯 THÁNG 5/2026 – THỰC TẾ</div>
+      <div style="background:#fff;border:1px solid #E5E7EB;border-top:none;border-radius:0 0 6px 6px;padding:10px;">
+        <div class="kpi-grid">
+          <div class="kpi blue"><div class="kpi-label">Cổng T5</div><div class="kpi-val">1,043 tr</div><div class="kpi-delta up">▲ +17.5%</div></div>
+          <div class="kpi yellow"><div class="kpi-label">POS T5</div><div class="kpi-val">403 tr</div><div class="kpi-delta dn">▼ −11.4%</div></div>
+          <div class="kpi red"><div class="kpi-label">CTTC KHH T5</div><div class="kpi-val">181 tr</div><div class="kpi-delta up">▲ +75.7%</div></div>
+          <div class="kpi teal"><div class="kpi-label">CTTC HH T5</div><div class="kpi-val">118 tr</div><div class="kpi-delta dn">▼ −42.2%</div></div>
+          <div class="kpi green"><div class="kpi-label">Tổng TG T5</div><div class="kpi-val">1,994 tr</div><div class="kpi-delta up">▲ +3.8%</div></div>
+          <div class="kpi blue"><div class="kpi-label">BNPL T5</div><div class="kpi-val">247 tr</div><div class="kpi-delta dn">▼ −8.1%</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="chart-box">
+      <div class="card-title">DS TG T4 vs T5 – Hình thức (triệu)</div>
+      <div style="position:relative;height:200px;"><canvas id="c1" role="img" aria-label="Bar chart DS trả góp T4 vs T5 theo hình thức thanh toán"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="card-title">DS TG T4 vs T5 – 4 Brands (triệu)</div>
+      <div style="position:relative;height:200px;"><canvas id="c2" role="img" aria-label="Bar chart DS trả góp T4 vs T5 của Sony Bose Marshall JBL"></canvas></div>
+    </div>
+  </div>
+
+  <div class="st">4 Brands – T4 vs T5</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Brand</th><th class="r">DS All T4</th><th class="r">TG T4</th><th class="r">TG T5</th><th class="r">Δ</th><th class="r">CP MDR</th><th class="r">MDR%</th><th class="r">CTTC%</th><th class="r">KH mới</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td><span class="brand"><span class="dot ds"></span><b>Sony</b></span></td><td class="r">5,856</td><td class="r">651.5</td><td class="r"><b style="color:#1D4ED8">652.1</b></td><td class="r"><span class="pill pgr">+0.1%</span></td><td class="r" style="color:#DC2626">18.33</td><td class="r">2.81%</td><td class="r">15.4%</td><td class="r"><span class="pill py">56%</span></td><td><span class="pill pg">✅ Sony TG</span></td></tr>
+        <tr><td><span class="brand"><span class="dot db"></span><b>Bose</b></span></td><td class="r">1,250</td><td class="r">172.5</td><td class="r"><b style="color:#059669">234.4</b></td><td class="r"><span class="pill pg">▲+35.9%</span></td><td class="r" style="color:#DC2626">5.65</td><td class="r">3.27%</td><td class="r">7.5%</td><td class="r"><span class="pill pr">35%↓</span></td><td><span class="pill py">⚠️ Pitch TG</span></td></tr>
+        <tr><td><span class="brand"><span class="dot dm"></span><b>Marshall</b></span></td><td class="r">938</td><td class="r">106.6</td><td class="r"><b style="color:#1D4ED8">119.6</b></td><td class="r"><span class="pill pg">▲+12.2%</span></td><td class="r" style="color:#DC2626">3.58</td><td class="r">3.36%</td><td class="r"><b style="color:#059669">30.3%</b></td><td class="r"><span class="pill py">61%</span></td><td><span class="pill py">⚠️ Pitch TG</span></td></tr>
+        <tr><td><span class="brand"><span class="dot dj"></span><b>JBL</b></span></td><td class="r">2,366</td><td class="r">177.5</td><td class="r"><b style="color:#DC2626">169.9</b></td><td class="r"><span class="pill pr">▼−4.3%</span></td><td class="r" style="color:#DC2626">4.82</td><td class="r">2.71%</td><td class="r">25.7%</td><td class="r"><span class="pill pg">72%↑</span></td><td><span class="pill pr">🔴 DS giảm</span></td></tr>
+        <tr class="total-row"><td><b>TỔNG</b></td><td class="r">10,410</td><td class="r"><b>1,108</b></td><td class="r"><b>1,176</b></td><td class="r"><span class="pill pg">▲+6.2%</span></td><td class="r"><b>32.4</b></td><td class="r">2.92%</td><td class="r">17.3%</td><td class="r">~56%</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💡 Key Insights T4 &amp; T5/2026</div>
+    <div class="grid2" style="margin-bottom:0;">
+      <div class="success"><b>Bose tăng mạnh T5: +35.9%</b> (172→234tr). CTTC chỉ 7.5% → tiềm năng đẩy qua CTTC khi mở 9–12T.</div>
+      <div class="info"><b>JBL giảm T5: −4.3%</b>. 72% KH mới (cao nhất) → mở 9–12T CTTC có thể kéo lại DS.</div>
+      <div class="success"><b>Sony model tốt nhất:</b> net cost chỉ 2.44tr (MDR 18.33 − TG 15.89). Blueprint để pitch 3 brand còn lại.</div>
+      <div class="warn"><b>MDR 9–12T nhảy 1.93%→8–10%.</b> Tổng tăng +21.4tr: Sony +12.6, JBL +4.9, Marshall +2.5, Bose +1.4.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 1: T4 vs T5 -->
+<div class="page" id="p1">
+  <div class="st">DS TG T4 vs T5 – Chi tiết theo Hình thức</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Hình thức</th><th class="r">T4 (tr)</th><th class="r">%T4</th><th class="r">CP T4</th><th class="r">MDR T4</th><th class="r">T5 (tr)</th><th class="r">%T5</th><th class="r">Δ DS</th><th class="r">Δ%</th><th>Ghi chú</th></tr></thead>
+      <tbody id="method-body"></tbody>
+    </table>
+  </div>
+  <div class="divider"></div>
+  <div class="st">4 Brands – CP KB1 (3–6T) vs KB2 (9–12T)</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Brand</th><th class="r">TG T4</th><th class="r">TG T5</th><th class="r">Δ</th><th class="r">CP T4</th><th class="r">KB1 T5</th><th class="r">KB2 T5</th><th class="r">∆CP</th><th>Pitch</th></tr></thead>
+      <tbody>
+        <tr><td><span class="brand"><span class="dot ds"></span>Sony</span></td><td class="r">651.5</td><td class="r" style="color:#1D4ED8"><b>652.1</b></td><td class="r"><span class="pill pgr">+0.1%</span></td><td class="r" style="color:#DC2626">18.33</td><td class="r" style="color:#D97706">19.25</td><td class="r" style="color:#DC2626"><b>31.85</b></td><td class="r"><span class="pill pr">+12.6</span></td><td><span class="pill py">Nâng 10%→12-13%</span></td></tr>
+        <tr><td><span class="brand"><span class="dot db"></span>Bose</span></td><td class="r">172.5</td><td class="r" style="color:#059669"><b>234.4</b></td><td class="r"><span class="pill pg">+35.9%</span></td><td class="r" style="color:#DC2626">5.65</td><td class="r" style="color:#D97706">5.93</td><td class="r" style="color:#DC2626"><b>7.40</b></td><td class="r"><span class="pill pr">+1.5</span></td><td><span class="pill py">TG 8–10% kỳ dài</span></td></tr>
+        <tr><td><span class="brand"><span class="dot dm"></span>Marshall</span></td><td class="r">106.6</td><td class="r" style="color:#1D4ED8"><b>119.6</b></td><td class="r"><span class="pill pg">+12.2%</span></td><td class="r" style="color:#DC2626">3.58</td><td class="r" style="color:#D97706">3.76</td><td class="r" style="color:#DC2626"><b>6.18</b></td><td class="r"><span class="pill pr">+2.5</span></td><td><span class="pill py">TG 5–8% target DS</span></td></tr>
+        <tr><td><span class="brand"><span class="dot dj"></span>JBL</span></td><td class="r">177.5</td><td class="r" style="color:#DC2626"><b>169.9</b></td><td class="r"><span class="pill pr">−4.3%</span></td><td class="r" style="color:#DC2626">4.82</td><td class="r" style="color:#D97706">5.06</td><td class="r" style="color:#DC2626"><b>9.98</b></td><td class="r"><span class="pill pr">+4.9</span></td><td><span class="pill py">TG 5% + co-mktg</span></td></tr>
+        <tr class="total-row"><td>TỔNG</td><td class="r">1,108</td><td class="r">1,176</td><td class="r"><span class="pill pg">+6.2%</span></td><td class="r">32.4</td><td class="r">34.0</td><td class="r"><b>55.4</b></td><td class="r"><span class="pill pr">+21.4</span></td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid2">
+    <div class="chart-box">
+      <div class="card-title">Phân khúc giá T4</div>
+      <div style="position:relative;height:180px;"><canvas id="c3" role="img" aria-label="Donut chart phân khúc giá tai nghe T4/2026"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Kỳ hạn trả góp T4 – 4 Brands</div>
+      <table style="min-width:0;font-size:10px;">
+        <thead><tr><th>Brand</th><th class="r">0–3T</th><th class="r">4–6T</th><th class="r">7–9T</th><th class="r">10–12T</th><th class="r">KH mới</th></tr></thead>
+        <tbody>
+          <tr><td><span class="brand"><span class="dot ds"></span>Sony</span></td><td class="r">3.1%</td><td class="r"><b>28.8%</b></td><td class="r">—</td><td class="r">3.7%</td><td class="r"><span class="pill py">56%</span></td></tr>
+          <tr><td><span class="brand"><span class="dot db"></span>Bose</span></td><td class="r">3.8%</td><td class="r"><b>46.2%</b></td><td class="r">—</td><td class="r">—</td><td class="r"><span class="pill pr">35%</span></td></tr>
+          <tr><td><span class="brand"><span class="dot dm"></span>Marshall</span></td><td class="r">6.5%</td><td class="r"><b>41.9%</b></td><td class="r">—</td><td class="r">—</td><td class="r"><span class="pill py">61%</span></td></tr>
+          <tr><td><span class="brand"><span class="dot dj"></span>JBL</span></td><td class="r">—</td><td class="r"><b>20.0%</b></td><td class="r">3.5%</td><td class="r">3.5%</td><td class="r"><span class="pill pg">72%</span></td></tr>
+        </tbody>
+      </table>
+      <div class="warn" style="margin-top:8px;margin-bottom:0;">JBL &amp; Sony đã có đơn 7–12T → nhu cầu kỳ dài có thực.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: MDR -->
+<div class="page" id="p2">
+  <div class="info"><b>Nguồn:</b> MDR thực T4 từ PowerBI Chi phí% × DS All. CTTC từ Lark TRẢ GÓP CELLPHONES. MDR 9–12T là ước tính.</div>
+  <div class="st">MDR Thực T4 – Thẻ Tín Dụng</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Hình thức</th><th class="c">3–6T</th><th class="c">9T est.</th><th class="c">12T est.</th><th class="r">DS T4</th><th class="r">CP T4</th><th class="r">MDR Thực</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr><td><b>NH liên kết trực tiếp</b></td><td class="c"><span class="pill pg">0% ✅</span></td><td class="c"><span class="pill pr">~8–10%</span></td><td class="c"><span class="pill pr">~9–11%</span></td><td class="r">—</td><td class="r">—</td><td class="r">—</td><td style="font-size:9px;color:#6B7280">Lark: 3-6T = 0%; 9T+ phải trả MDR</td></tr>
+        <tr><td><b>TRẢ GÓP CỔNG (blend)</b></td><td class="c"><span class="pill pg">1.93%</span></td><td class="c"><span class="pill pr">~8–10%</span></td><td class="c"><span class="pill pr">~9–11%</span></td><td class="r">887.8</td><td class="r" style="color:#DC2626">17.1</td><td class="r"><b style="color:#059669">1.93%</b></td><td style="font-size:9px;color:#6B7280">Blend mix + BNPL 0%</td></tr>
+        <tr><td><b>TRẢ GÓP POS (blend)</b></td><td class="c"><span class="pill py">3.22%</span></td><td class="c">~3.5%</td><td class="c">~4.0%</td><td class="r">455.6</td><td class="r" style="color:#DC2626">14.7</td><td class="r"><b style="color:#D97706">3.22%</b></td><td style="font-size:9px;color:#6B7280">Cà thẻ tại POS</td></tr>
+        <tr><td><b>BNPL</b></td><td class="c"><span class="pill pg">0% ✅</span></td><td class="c"><span class="pill pg">0%</span></td><td class="c"><span class="pill pg">0%</span></td><td class="r">269.6</td><td class="r">0</td><td class="r" style="color:#059669">0%</td><td style="font-size:9px;color:#6B7280">0% merchant – cần xác nhận</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="st">MDR Thực T4 – CTTC</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>CTTC</th><th class="r">DS T4</th><th class="r">CP T4</th><th class="r">MDR T4</th><th class="r">DS T5</th><th>Kỳ hạn</th><th>Trả trước</th><th>Max vay</th></tr></thead>
+      <tbody>
+        <tr><td><b>CTTC CÓ HOA HỒNG</b></td><td class="r">204.4</td><td class="r" style="color:#DC2626">11.0</td><td class="r"><b style="color:#D97706">5.40%</b></td><td class="r" style="color:#DC2626">118.1▼</td><td>6–9T</td><td>0%</td><td>—</td></tr>
+        <tr><td><b>CTTC KHÔNG HOA HỒNG</b></td><td class="r">103.0</td><td class="r" style="color:#DC2626">7.7</td><td class="r"><b style="color:#DC2626">7.45%</b></td><td class="r" style="color:#059669">181.0▲</td><td>6–12T</td><td>0–20%</td><td>—</td></tr>
+        <tr><td style="color:#6B7280;font-style:italic;">Shinhan Finance</td><td colspan="3" class="c"><span class="pill pg">~6.8% est.</span></td><td></td><td>3/6/9/12T</td><td><span class="pill pg">0%✅</span></td><td>100tr</td></tr>
+        <tr><td style="color:#6B7280;font-style:italic;">Home Credit</td><td colspan="3" class="c"><span class="pill py">~7.5% est.</span></td><td></td><td>6/8/10/12T</td><td><span class="pill pg">0%✅</span></td><td>40tr</td></tr>
+        <tr><td style="color:#6B7280;font-style:italic;">Mirae Asset</td><td colspan="3" class="c"><span class="pill py">~7.0% est.</span></td><td></td><td>4/6/9T</td><td><span class="pill py">20%</span></td><td>30tr</td></tr>
+        <tr><td style="color:#6B7280;font-style:italic;">HD Saison</td><td colspan="3" class="c"><span class="pill py">~7.5% est.</span></td><td></td><td>6/9T</td><td><span class="pill py">20%</span></td><td>25tr</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="chart-box">
+    <div class="card-title">Chi phí TG T4 – Breakdown (triệu VNĐ)</div>
+    <div style="position:relative;height:200px;"><canvas id="c4" role="img" aria-label="Bar chart chi phí trả góp T4 breakdown theo hình thức"></canvas></div>
+  </div>
+</div>
+
+<!-- PAGE 3: SONY TG -->
+<div class="page" id="p3">
+  <div class="success"><b>Nguồn:</b> Google Sheets PCC_THẢO TIÊN – Sheet38. Sony TG <b>10% giá bán</b> trên 46 variants, kỳ 06/04–03/05/2026.</div>
+  <div class="st">SKU Sony được TG 10%</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Model</th><th>Phân khúc</th><th class="r">Giá bán</th><th class="r">TG/unit (incl)</th><th class="r">TG/unit (excl)</th><th class="c">%TG</th></tr></thead>
+      <tbody>
+        <tr><td><b>WF-L910</b></td><td>Khối in-ear</td><td class="r">3,450,000</td><td class="r" style="color:#059669"><b>345,000</b></td><td class="r">319,444</td><td class="c"><span class="pill pg">10%</span></td></tr>
+        <tr><td><b>WF-LS910N</b></td><td>Khối ANC</td><td class="r">3,450,000</td><td class="r" style="color:#059669"><b>345,000</b></td><td class="r">319,444</td><td class="c"><span class="pill pg">10%</span></td></tr>
+        <tr><td><b>WH-1000XM5</b></td><td>Chụp Flagship</td><td class="r">6,890,000</td><td class="r" style="color:#059669"><b>689,000</b></td><td class="r">637,963</td><td class="c"><span class="pill pg">10%</span></td></tr>
+        <tr><td><b>WH-1000XM6</b></td><td>Chụp Flagship mới</td><td class="r">10,390,000</td><td class="r" style="color:#059669"><b>1,039,000</b></td><td class="r">962,037</td><td class="c"><span class="pill pg">10%</span></td></tr>
+        <tr><td><b>WH-CH720N</b></td><td>Chụp ANC phổ thông</td><td class="r">2,190,000</td><td class="r" style="color:#059669"><b>219,000</b></td><td class="r">202,778</td><td class="c"><span class="pill pg">10%</span></td></tr>
+        <tr><td><b>WH-ULT900N</b></td><td>Chụp Bass</td><td class="r">3,650,000</td><td class="r" style="color:#059669"><b>365,000</b></td><td class="r">337,963</td><td class="c"><span class="pill pg">10%</span></td></tr>
+        <tr><td><b>IER-G900</b></td><td>Gaming in-ear</td><td class="r">3,290,000</td><td class="r" style="color:#059669"><b>329,000</b></td><td class="r">304,630</td><td class="c"><span class="pill pg">10%</span></td></tr>
+        <tr><td><b>WH-G900N</b></td><td>Gaming ANC</td><td class="r">3,990,000</td><td class="r" style="color:#059669"><b>399,000</b></td><td class="r">369,444</td><td class="c"><span class="pill pg">10%</span></td></tr>
+        <tr class="total-row"><td colspan="3"><b>Tổng TG kỳ 06/04–03/05/2026</b></td><td class="r"><b style="color:#059669">≈17.5 tr</b></td><td class="r">15,891,667</td><td class="c">10%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-title">Sony P&amp;L Trả góp T4</div>
+      <table style="min-width:0;font-size:11px;">
+        <tbody>
+          <tr><td style="color:#6B7280">DS TG Sony T4</td><td class="r"><b>651,477,000 đ</b></td></tr>
+          <tr><td style="color:#6B7280">CP MDR Sony (~2.81%)</td><td class="r" style="color:#DC2626">18,330,000 đ</td></tr>
+          <tr><td style="color:#6B7280">Sony TG (excl VAT)</td><td class="r" style="color:#059669">15,891,667 đ</td></tr>
+          <tr><td style="color:#6B7280">Sony TG (incl VAT)</td><td class="r" style="color:#059669">17,480,834 đ</td></tr>
+          <tr style="border-top:2px solid #BFDBFE;font-weight:700;"><td>CP NET Sony T4</td><td class="r" style="color:#059669"><b>2,438,333 đ ✅</b></td></tr>
+          <tr><td style="color:#6B7280;font-size:10px;">% TG / CP MDR</td><td class="r" style="color:#059669;font-size:10px;">86.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="background:#FFFBEB;border-color:#FDE68A;">
+      <div class="card-title" style="color:#92400E;">⚡ Pitch Sony T5</div>
+      <p style="font-size:10px;color:#78350F;line-height:1.7;">Mở 9–12T: MDR <b>1.93%→8–10%</b>, tăng <b>+12.6tr/tháng</b>.<br><br>
+      3 đề xuất:<br>
+      1️⃣ Nâng TG <b>10%→12–13%</b> tất cả SKU<br>
+      2️⃣ Mở SKU mới: MDR-G900, WI-C100, WF-C710<br>
+      3️⃣ TG thêm <b>+2% flat</b> DS Sony ≥5tr VNĐ<br><br>
+      <i>Sony bù được 86.7% CP MDR hiện tại.</i></p>
+    </div>
+  </div>
+  <div class="st">Pitch Summary – 4 Brands</div>
+  <div class="pitch-grid">
+    <div class="pitch-card"><div class="pitch-brand s">🎧 SONY</div><div class="pitch-kpi"><div class="pki"><div class="v">2.44tr</div><div class="l">Net cost T4</div></div><div class="pki"><div class="v">+12.6tr</div><div class="l">Cần TG T5</div></div><div class="pki"><div class="v">56%</div><div class="l">KH mới</div></div></div><div class="pitch-ask">→ Nâng 10%→12-13% hoặc mở SKU</div></div>
+    <div class="pitch-card"><div class="pitch-brand b">🎵 BOSE</div><div class="pitch-kpi"><div class="pki"><div class="v">5.65tr</div><div class="l">CP MDR T4</div></div><div class="pki"><div class="v">+1.5tr</div><div class="l">Cần TG T5</div></div><div class="pki"><div class="v">35%</div><div class="l">KH mới</div></div></div><div class="pitch-ask">→ TG 8–10% CP kỳ dài; T5 +35.9%</div></div>
+    <div class="pitch-card"><div class="pitch-brand m">🎸 MARSHALL</div><div class="pitch-kpi"><div class="pki"><div class="v">3.58tr</div><div class="l">CP MDR T4</div></div><div class="pki"><div class="v">+2.5tr</div><div class="l">Cần TG T5</div></div><div class="pki"><div class="v">30%</div><div class="l">CTTC hiện</div></div></div><div class="pitch-ask">→ TG 5–8% khi mở 9T; CTTC tốt nhất</div></div>
+    <div class="pitch-card"><div class="pitch-brand j">🔊 JBL</div><div class="pitch-kpi"><div class="pki"><div class="v">4.82tr</div><div class="l">CP MDR T4</div></div><div class="pki"><div class="v">+4.9tr</div><div class="l">Cần TG T5</div></div><div class="pki"><div class="v" style="color:#059669">72%</div><div class="l">KH mới↑</div></div></div><div class="pitch-ask">→ TG 5% + co-mktg; 72% KH mới</div></div>
+  </div>
+</div>
+
+<!-- PAGE 4: SCENARIO -->
+<div class="page" id="p4">
+  <div class="info">DS tăng 5% T4, CTTC +30%, 25% cổng chuyển 9–12T (MDR 10%), CTTC 9–12T MDR 7.5%.</div>
+  <div class="sc-grid">
+    <div class="sc-card base">
+      <div class="sc-lbl">📌 Baseline T4/2026</div>
+      <div class="sc-row"><span>DS TG 4 brands</span><span class="scv scvb">1,108 tr</span></div>
+      <div class="sc-row"><span>% qua CTTC</span><span class="scv">16.0%</span></div>
+      <div class="sc-row"><span>MDR blend thực</span><span class="scv">2.63%</span></div>
+      <div class="sc-row"><span>CP TG (P&amp;L)</span><span class="scv scvr">69.3 tr</span></div>
+      <div class="sc-row"><span>Sony net cost</span><span class="scv scvg">2.44 tr ✅</span></div>
+      <div class="sc-row"><span>KH mới (JBL)</span><span class="scv">72%</span></div>
+    </div>
+    <div class="sc-card target">
+      <div class="sc-lbl t">🎯 T5 – Mở 9–12T</div>
+      <div class="sc-row"><span>DS TG dự tính</span><span class="scv scvg">~1,440 tr</span></div>
+      <div class="sc-row"><span>% qua CTTC</span><span class="scv scvg">~35–40%</span></div>
+      <div class="sc-row"><span>CP tăng thêm</span><span class="scv scvr">+21.4 tr</span></div>
+      <div class="sc-row"><span>Sony cần TG</span><span class="scv scvr">+12.6 tr</span></div>
+      <div class="sc-row"><span>Bose/Marshall/JBL</span><span class="scv scvr">+1.5/+2.5/+4.9 tr</span></div>
+      <div class="sc-row"><span>KH mới thêm</span><span class="scv scvg">+300–500 KH/tháng</span></div>
+    </div>
+  </div>
+  <div class="st">Chi tiết Scenario theo Brand</div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Brand</th><th class="r">TG T4</th><th class="r">KB1 DS</th><th class="r">KB1 CP</th><th class="r">KB2 DS</th><th class="r">KB2 CP</th><th class="r">∆CP</th><th class="r">∆CP/DS</th><th>Cần?</th></tr></thead>
+      <tbody>
+        <tr><td><span class="brand"><span class="dot ds"></span>Sony</span></td><td class="r">651.5</td><td class="r">684.1</td><td class="r">19.25</td><td class="r" style="color:#1D4ED8"><b>847.0</b></td><td class="r" style="color:#DC2626"><b>31.85</b></td><td class="r"><span class="pill pr">+12.6</span></td><td class="r">+1.49%</td><td><span class="pill pr">✅ Sony TG</span></td></tr>
+        <tr><td><span class="brand"><span class="dot db"></span>Bose</span></td><td class="r">172.5</td><td class="r">181.1</td><td class="r">5.93</td><td class="r" style="color:#1D4ED8"><b>224.3</b></td><td class="r" style="color:#DC2626"><b>7.40</b></td><td class="r"><span class="pill pr">+1.5</span></td><td class="r">+0.66%</td><td><span class="pill py">🟡 Cân nhắc</span></td></tr>
+        <tr><td><span class="brand"><span class="dot dm"></span>Marshall</span></td><td class="r">106.6</td><td class="r">111.9</td><td class="r">3.76</td><td class="r" style="color:#1D4ED8"><b>138.6</b></td><td class="r" style="color:#DC2626"><b>6.18</b></td><td class="r"><span class="pill pr">+2.5</span></td><td class="r">+1.75%</td><td><span class="pill pr">✅ Marshall TG</span></td></tr>
+        <tr><td><span class="brand"><span class="dot dj"></span>JBL</span></td><td class="r">177.5</td><td class="r">186.4</td><td class="r">5.06</td><td class="r" style="color:#1D4ED8"><b>230.7</b></td><td class="r" style="color:#DC2626"><b>9.98</b></td><td class="r"><span class="pill pr">+4.9</span></td><td class="r">+2.14%</td><td><span class="pill pr">✅ JBL TG</span></td></tr>
+        <tr class="total-row"><td>TỔNG</td><td class="r">1,108</td><td class="r">1,163</td><td class="r">34.0</td><td class="r"><b>1,441</b></td><td class="r"><b>55.4</b></td><td class="r"><span class="pill pr">+21.4</span></td><td class="r">+1.49%</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="chart-box">
+    <div class="card-title">CP T4 vs KB1 vs KB2 theo Brand (triệu)</div>
+    <div style="position:relative;height:220px;"><canvas id="c5" role="img" aria-label="Bar chart so sánh chi phí T4 KB1 KB2 theo brand"></canvas></div>
+  </div>
+  <div class="warn"><b>Shinhan Finance ưu tiên 1</b> khi mở 9–12T: 3/6/9/12T, trả trước 0%, max 100tr, MDR ~6.8%.</div>
+</div>
+
+<!-- PAGE 5: ACTION PLAN -->
+<div class="page" id="p5">
+  <div class="info"><b>11 bước</b> triển khai mở rộng 9–12T. P1 cần xong trước 07/06/2026.</div>
+  <div style="background:#fff;border-radius:8px;border:1px solid #E5E7EB;overflow:hidden;">
+    <div style="display:grid;grid-template-columns:28px 1fr 110px 80px 80px;gap:6px;padding:8px 12px;background:#F8FAFC;border-bottom:2px solid #E5E7EB;font-size:9px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.3px;">
+      <div>#</div><div>Hành động</div><div>Người thực hiện</div><div>Deadline</div><div>Trạng thái</div>
+    </div>
+    <div id="action-rows"></div>
+  </div>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script>
+const mD=[
+  {name:'TRẢ GÓP CỔNG',t4:887.8,cp:17.1,mdr:1.93,t5:1043.5,note:'MDR 1.93% thực, lên 8-10% khi 9-12T'},
+  {name:'TRẢ GÓP POS',t4:455.6,cp:14.7,mdr:3.22,t5:403.7,note:'POS MDR 3.22%'},
+  {name:'BNPL',t4:269.6,cp:0,mdr:0,t5:247.7,note:'0% merchant'},
+  {name:'CTTC CÓ HH',t4:204.4,cp:11.0,mdr:5.40,t5:118.1,note:'T5 giảm – kiểm tra HĐ'},
+  {name:'CTTC KHÔNG HH',t4:103.0,cp:7.7,mdr:7.45,t5:181.0,note:'T5 tăng +75.7% – MDR cao nhất'},
+];
+const T4=1920.4,T5=1994.0;
+const acts=[
+  [1,'Lấy data DS TG T5 đầy đủ từ PowerBI','Team Data','03/06','⏳ Đang chờ'],
+  [2,'Xin bảng phí 9-12T từ NH/cổng TT','Team Finance','05/06','⏳ Đang chờ'],
+  [3,'Xin bảng phí CTTC 9-12T (Shinhan, HC, Mirae)','Team Finance','05/06','⏳ Đang chờ'],
+  [4,'Xác nhận DS Sony TG T5 (GSheets Sheet38)','AM Sony','03/06','⏳ Đang chờ'],
+  [5,'Build slide pitch SONY (CP T4+T5, đề xuất nâng TG)','PM+AM Sony','07/06','🔵 Đang làm'],
+  [6,'Meeting Sony – Approval nâng TG / mở SKU','AM Sony+PM','10/06','📅 Lên lịch'],
+  [7,'Build slide pitch Bose, Marshall, JBL','PM+AM','12/06','📅 Lên lịch'],
+  [8,'Meeting Bose/Marshall/JBL – Pitch TG kỳ dài','AM+PM','15/06','📅 Lên lịch'],
+  [9,'Ra quyết định mở 9-12T – chọn CTTC ưu tiên','BGĐ+PM','15/06','⏳ Chờ input'],
+  [10,'Update hệ thống/POS 9-12T cho 4 brands','IT+Ops','20/06','⏳ Chờ QĐ'],
+  [11,'Theo dõi KPI T6 – update báo cáo này','Data+PM','05/07','⏳ Chưa bắt đầu'],
+];
+const p=[1,1,1,1,1,1,2,2,2,3,3];
+const pCls=['','pr','pr','pr','pr','pr','pr','py','py','py','pgr','pgr'];
+const stCls={'⏳ Đang chờ':'sw','🔵 Đang làm':'sd','📅 Lên lịch':'ss2','⏳ Chờ input':'sw','⏳ Chờ QĐ':'sw','⏳ Chưa bắt đầu':'sw'};
+
+function renderMethods(){
+  let h='';
+  mD.forEach(m=>{
+    const d=m.t5-m.t4,dp=d/m.t4;
+    const uc=d>=0?'pg':'pr',mc=m.mdr===0?'pg':m.mdr<4?'py':'pr';
+    h+=`<tr><td><b>${m.name}</b></td><td class="r">${m.t4.toFixed(1)}</td><td class="r">${(m.t4/T4*100).toFixed(1)}%</td><td class="r" style="color:#DC2626">${m.cp>0?m.cp.toFixed(1):'—'}</td><td class="r"><span class="pill ${mc}">${m.mdr>0?m.mdr.toFixed(2)+'%':'0%'}</span></td><td class="r"><b style="color:#1D4ED8">${m.t5.toFixed(1)}</b></td><td class="r">${(m.t5/T5*100).toFixed(1)}%</td><td class="r"><span class="pill ${uc}">${d>=0?'+':''}${d.toFixed(1)}</span></td><td class="r"><span class="pill ${uc}">${(dp*100).toFixed(1)}%</span></td><td style="font-size:9px;color:#6B7280">${m.note}</td></tr>`;
+  });
+  const cpT=mD.reduce((a,m)=>a+m.cp,0);
+  h+=`<tr class="total-row"><td><b>TỔNG</b></td><td class="r"><b>${T4.toFixed(1)}</b></td><td class="r">100%</td><td class="r"><b style="color:#DC2626">${cpT.toFixed(1)}</b></td><td class="r"><span class="pill py">${(cpT/T4*100).toFixed(2)}%</span></td><td class="r"><b style="color:#1D4ED8">${T5.toFixed(1)}</b></td><td class="r">100%</td><td class="r"><span class="pill pg">+${(T5-T4).toFixed(1)}</span></td><td class="r"><span class="pill pg">+${((T5-T4)/T4*100).toFixed(1)}%</span></td><td></td></tr>`;
+  document.getElementById('method-body').innerHTML=h;
+}
+function renderActions(){
+  document.getElementById('action-rows').innerHTML=acts.map(([n,a,w,d,s],i)=>`<div class="ap-row"><div class="ap-num">${n}</div><div><div style="font-size:11px;color:#1F2937;line-height:1.4">${a}</div><div style="margin-top:3px"><span class="pill ${pCls[i+1]}">P${p[i]}</span></div></div><div style="font-size:10px;color:#6B7280">${w}</div><div style="font-size:10px;font-weight:600">${d}/2026</div><div><span class="${stCls[s]||'sw'}">${s}</span></div></div>`).join('');
+}
+function initCharts(){
+  new Chart(document.getElementById('c1'),{type:'bar',data:{labels:['Cổng','POS','BNPL','CTTC HH','CTTC KHH'],datasets:[{label:'T4',data:[887.8,455.6,269.6,204.4,103.0],backgroundColor:'#BFDBFE'},{label:'T5',data:[1043.5,403.7,247.7,118.1,181.0],backgroundColor:'#1D4ED8'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}}},scales:{y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}}}}}});
+  new Chart(document.getElementById('c2'),{type:'bar',data:{labels:['Sony','Bose','Marshall','JBL'],datasets:[{label:'TG T4',data:[651.5,172.5,106.6,177.5],backgroundColor:'#BFDBFE'},{label:'TG T5',data:[652.1,234.4,119.6,169.9],backgroundColor:'#1D4ED8'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}}},scales:{y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}}}}}});
+  new Chart(document.getElementById('c3'),{type:'doughnut',data:{labels:['0–5tr (76%)','5–10tr (19.1%)','10–20tr (4.9%)'],datasets:[{data:[20287,5094,1319],backgroundColor:['#3B82F6','#10B981','#F59E0B'],borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:10}}}},cutout:'65%'}});
+  new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['Cổng TD','POS','CTTC HH','CTTC KHH','BNPL'],datasets:[{label:'CP (triệu)',data:[17.1,14.7,11.0,7.7,0],backgroundColor:['#3B82F6','#F59E0B','#EF4444','#DC2626','#10B981']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}}}}}});
+  new Chart(document.getElementById('c5'),{type:'bar',data:{labels:['Sony','Bose','Marshall','JBL'],datasets:[{label:'CP T4',data:[18.33,5.65,3.58,4.82],backgroundColor:'#BFDBFE'},{label:'KB1 3-6T',data:[19.25,5.93,3.76,5.06],backgroundColor:'#FDE68A'},{label:'KB2 9-12T',data:[31.85,7.40,6.18,9.98],backgroundColor:'#EF4444'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:10}}}},scales:{y:{grid:{color:'#F3F4F6'},ticks:{font:{size:9}}}}}});
+}
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.page').forEach((p,i)=>p.classList.toggle('active',i===n));
+}
+renderMethods();renderActions();initCharts();
+</script>
